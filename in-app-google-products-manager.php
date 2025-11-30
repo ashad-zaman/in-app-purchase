@@ -12,16 +12,13 @@ use Firebase\JWT\JWT;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\Exception\RequestException;
 
-
-
 use ReceiptValidator\iTunes\Validator as ITunesValidator;
 use ReceiptValidator\GooglePlay\ProductAccess as GooglePlayProductAccess;
 
 /**
  * Manager for in-app products across different app stores.
  */
-
-class In_APP_Products_Manager
+class In_APP_Google_Products_Manager
 {
     /* ---------------- PROPERTIES ---------------- */
     private ITunesValidator $appleValidator;
@@ -107,7 +104,6 @@ class In_APP_Products_Manager
             ];
         }
     }
-
 
     /**
      * Summary of googleHandler
@@ -390,258 +386,68 @@ class In_APP_Products_Manager
 }
 
 
-$object = new In_APP_Products_Manager();
-// // Google Play Example
+$object = new In_APP_Google_Products_Manager();
 
-// $result = $object->handle('google','get',[
-//     'sku' => 'lt.xxxx.product.book.test' 
-// ]
-// );
 
-// echo "Google Get Result:\n"; 
-// // print_r($result['data']->getStatus()); 
+// Google Play Example of usages
+
+$result = $object->handle('google','get',[
+    'sku' => 'lt.xxxx.product.book.test' 
+]
+);
+
+echo "Google Get Result:\n"; 
+// print_r($result['data']->getStatus()); 
+$listing=$result['data']->getListings();
+foreach($listing as $key => $value){
+    echo "getTitle:  =".$value->getTitle()."\n";
+    echo "getDescription:=".$value->getDescription()."\n";
+    echo "getBenefits: =".$value->getBenefits()."\n";
+}
+// print_r($listing);
+// print_r($result['data']->getDeveloperPayload());
+print_r($result['data']->getSku());
+print_r($result['data']->getPrices());
+print_r($result['data']->getDefaultPrice());
+
+
+$result = $object->handle('google','list',  [ ]);
+
+echo "Google list Result:\n";
 // $listing=$result['data']->getListings();
-// foreach($listing as $key => $value){
-//     echo "getTitle:  =".$value->getTitle()."\n";
-//     echo "getDescription:=".$value->getDescription()."\n";
-//     echo "getBenefits: =".$value->getBenefits()."\n";
-// }
-// // print_r($listing);
-// // print_r($result['data']->getDeveloperPayload());
-// print_r($result['data']->getSku());
-// print_r($result['data']->getPrices());
-// print_r($result['data']->getDefaultPrice());
+print_r($result['data']->getListings());
+
+exit;
 
 
-// $result = $object->handle('google','list',  [ ]);
+$object=new In_APP_Google_Products_Manager();
+Google Play Example
+$result = $object->handle('google','insert',  [
+    'sku' => 'lt.xxxx.product.book.39',
+    'title' => 'Bandomoji knyga 39',
+    'description' => '39 testo knyga įterpimui',
+    'price' => 2.39,
+    'currency' => 'EUR',
+    'purchaseType' => 'managedUser',
+    'language' => 'lt',
+    'autoConvertMissingPrices' => true
+]);
 
-// echo "Google list Result:\n";
-// // $listing=$result['data']->getListings();
-// print_r($result['data']->getListings());
-
-// exit;
-
-
-// $object=new In_APP_Products_Manager();
-// Google Play Example
-// $result = $object->handle('google','insert',  [
-//     'sku' => 'lt.xxxx.product.book.39',
-//     'title' => 'Bandomoji knyga 39',
-//     'description' => '39 testo knyga įterpimui',
-//     'price' => 2.39,
-//     'currency' => 'EUR',
-//     'purchaseType' => 'managedUser',
-//     'language' => 'lt',
-//     'autoConvertMissingPrices' => true
-// ]);
-
-// echo "Google Insert Result:\n";
-// print_r($result); 
+echo "Google Insert Result:\n";
+print_r($result); 
 
 
 
-//*Update google one time products */
-// $result = $object->handle('google','update',  [
-//     'sku' => 'lt.xxxx.product.book.39',
-//     'title' => 'Bandomoji knyga 39 updated',
-//     'description' => '39 testo knyga įterpimui updating',
-//     'price' => 2.39,
-//     'currency' => 'EUR',
-//     'purchaseType' => 'managedUser',
-//     'language' => 'lt',
-//     'autoConvertMissingPrices' => true
-// ]);
+*Update google one time products */
+$result = $object->handle('google','update',  [
+    'sku' => 'lt.xxxx.product.book.39',
+    'title' => 'Bandomoji knyga 39 updated',
+    'description' => '39 testo knyga įterpimui updating',
+    'price' => 2.39,
+    'currency' => 'EUR',
+    'purchaseType' => 'managedUser',
+    'language' => 'lt',
+    'autoConvertMissingPrices' => true
+]);
 
-// echo "Google update Result:\n";
-// print_r($result); 
-// exit;
-
-//   Get
-
-// Apple Example
-
-// $iap_product_id='';
-
-// $response = $object->handle('apple', 'getAppleIapId', [ 
-//     'package_name' => 'lt.xxxx.reader',
-//     'productId' => 'lt.xxxx.product.book.test',
-//     'appId' => '6443621016'
-// ]);
-
-// if ($response['success']) {
-//     // print_r($response['data']);
-//     $iap_product_id = $response['data'];
-// } else {
-//     echo "Error: " . $response['error'];
-// }
-
-// $response = $object->handle('apple', 'get', [ 
-//     'package_name' => 'lt.xxxx.reader',
-//     'productId' => 'lt.xxxx.product.book.test',
-//     'iap_uui_id' => $iap_product_id,
-//     'appId' => '6443621016'
-// ]);
-
-// if ($response['success']) {
-//     print_r($response['data']);
-// } else {
-//     echo "Error: " . $response['error'];
-// }
-
-// exit;
-
-$price = 2.39;
-// $response =  $object->handle('apple','insert', [
-//     'productId' => 'lt.xxxx.product.book.39',
-//     'title' => 'Test Book 39', 
-//     'type' => 'NON_CONSUMABLE',
-//     'appId' => '6443621016'
-// ]);
-
-// echo "\n response";
-
-// print_r($response);
-
-// if ($response['success']) {
-//     echo "success";
-// Add price if provided
-//     if ($price) {
-//         // $iapId = $response['data']['data']['id'] ?? null;
-//         $iapId = 6755039396;
-//         if ($iapId) {
-//            echo  $tier = ApplePriceTierHelper::mapPriceToTier($price); exit;
-//             if ($tier) {
-//                 $priceResp =  $object->setPrice($iapId, $tier);
-//                 $response['price'] = $priceResp;
-//             }
-//         }
-//     }
-
-// print_r($response);
-// } else {
-//     echo "Error: " . $response['error'];
-// }
-
-
-//localizations
-
-// $response =  $object->handle('apple','localizations', [
-//     'productId' => 'lt.xxxx.product.book.39',
-//     'title' => 'Knyga 39', 
-//     'description' => '39 testo knyga įterpimui',
-//     'type' => 'NON_CONSUMABLE',
-//     'appId' => '6755039396'
-// ]);
-
-// echo "\n response";
-
-// print_r($response);
-
-// if ($response['success']) {
-//     echo "success";
-//             // Add price if provided
-//     //     if ($price) {
-//     //         // $iapId = $response['data']['data']['id'] ?? null;
-//     //         $iapId = 6755039396;
-//     //         if ($iapId) {
-//     //            echo  $tier = ApplePriceTierHelper::mapPriceToTier($price); exit;
-//     //             if ($tier) {
-//     //                 $priceResp =  $object->setPrice($iapId, $tier);
-//     //                 $response['price'] = $priceResp;
-//     //             }
-//     //         }
-//     //     }
-
-//     // print_r($response);
-// } else {
-//     echo "Error: " . $response['error'];
-// }
-
-
-// exit;
-
-
-// // Batch Get
-// $response = $object->handle('google', 'batchget', [ 
-//     'package_name' => 'com.example.myapp'
-// ], [
-//     'skus' => ['premium_upgrade', 'coins_1000', 'subscription_monthly']
-// ]);
-
-// if ($response['success']) {
-//     print_r($response['data']);
-// } else {
-//     echo "Error: " . $response['error'];
-// }
-
-// // Batch Update
-// $response = $object->handle('google', 'batchupdate', [ 
-//     'package_name' => 'com.example.myapp'
-// ], [
-//     'products' => [
-//         [
-//             'sku' => 'premium_upgrade',
-//             'status' => 'active',
-//             'defaultLanguage' => 'en-US',
-//             'defaultPrice' => [
-//                 'priceMicros' => '4990000',
-//                 'currency' => 'EUR'
-//             ]
-//         ],
-//         [
-//             'sku' => 'subscription_monthly',
-//             'status' => 'active',
-//             'defaultLanguage' => 'en-US',
-//             'defaultPrice' => [
-//                 'priceMicros' => '9990000',
-//                 'currency' => 'EUR'
-//             ]
-//         ]
-//     ]
-// ]);
-
-// if ($response['success']) {
-//     print_r($response['data']);
-// } else {
-//     echo "Error: " . $response['error'];
-// }
-
-
-
-// // Apple Example
-// $response =  $object->handle('apple','insert', [
-//     'issuer_id' => 'YOUR_ISSUER_ID',
-//     'key_id' => 'YOUR_KEY_ID',
-//     'private_key_file' => 'AuthKey.p8',
-//     'app_id' => 'YOUR_APP_ID'
-// ], [
-//     'sku' => 'premium_upgrade',
-//     'title' => 'Premium Upgrade',
-//     'price_tier' => 3, // Apple uses price tiers (see Apple Price Tiers doc)
-//     'type' => 'NON_CONSUMABLE'
-// ]);
-// if ($response['success']) {
-//     print_r($response['data']);
-// } else {
-//     echo "Error: " . $response['error'];
-// }
-// $response = $object->handle('apple', 'list', [
-//     'issuer_id' => 'your-issuer-id',
-//     'key_id' => 'your-key-id',
-//     'private_key_file' => '/path/to/AuthKey.p8'
-// ], [
-//     'app_id' => '1234567890'
-// ]);
-
-// print_r($response);
-
-// $response = $object->handle('apple', 'prices', [
-//     'issuer_id' => 'your-issuer-id',
-//     'key_id' => 'your-key-id',
-//     'private_key_file' => '/path/to/AuthKey.p8'
-// ], [
-//     'id' => 'abcd1234-ef56-7890-gh12-ijklmnop3456'
-// ]);
-
-// print_r($response);
-
+ 

@@ -1,14 +1,13 @@
 <?php
 
 /**
- * Plugin Name:       Antanukas In App Purchase (IAP)
- * Description:       Personal use for Antanukas development IAP.
+ * Plugin Name:       In App Purchase (IAP)
+ * Description:       IAP development.
  * Version:           1.0.2
  * Requires at least: 5.2
  * Requires PHP:      7.4
  * Author:            Ashaduzzaman
  * Author URI:   ''
- * Text Domain:       antanukasiap
  * License:           GPL v2 or later
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  */
